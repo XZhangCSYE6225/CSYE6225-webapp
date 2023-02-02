@@ -29,11 +29,11 @@ export const updateUserById = async (req, res) => {
             firstname,
             lastname,
             account_password,
-            created_at,
-            modified_at
+            account_created,
+            account_updated
         } = req.body;
-        if ( email || created_at || modified_at ) {
-            return res.status(400).json( { msg: "Not allowed to modify" } )
+        if ( email || account_created || account_updated ) {
+            return res.status(400).json( { msg: "Not allowed to modify email account_created and account_updated" } )
         }
         updateUser(req.params.id, req.body);
         res.status(204).json();
@@ -45,6 +45,20 @@ export const updateUserById = async (req, res) => {
 // POST
 export const register = async (req, res) => {
     try {
+        const {
+            email,
+            account_password,
+            firstname,
+            lastname,
+            account_created,
+            account_updated
+        } = req.body;
+        if (!email || !account_password || !firstname || !lastname) {
+            return res.status(400).json( { msg: "You must enter all email, account_password, firstname, lastname" } )
+        }
+        if (account_created || account_updated) {
+            return res.status(400).json( { msg: "You should not enter account_created and account_updated manually" } )
+        }
         const pattern = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4}$)/;
         if (!pattern.test(req.body.email)) {
             return res.status(400).json( { msg: "email address invalid" } )
