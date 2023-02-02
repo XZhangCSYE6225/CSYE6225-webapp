@@ -23,7 +23,7 @@ export async function getEmailUser(email) {
 
 export async function updateUser(id, body) {
     const [[rows]] = await db.query(`
-    SELECT DISTINCT  FROM appuser WHERE id = ? 
+    SELECT * FROM appuser WHERE id = ? 
     `, [id]);
     let {
         account_password,
