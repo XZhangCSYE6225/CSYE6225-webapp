@@ -1,7 +1,8 @@
-import db from "../database/database.js";
+import { getUsernameUser } from '../services/users.js';
+import { getIdProduct } from '../services/products.js';
 import bcrypt from 'bcrypt';
 
-export const verifyToken = async (req, res, next) => {
+export const verifyTokenUser = async (req, res, next) => {
     try {
         let token = req.header("Authorization");
         if (!token) {
@@ -11,22 +12,20 @@ export const verifyToken = async (req, res, next) => {
             const credentials = Buffer.from(token.split(" ")[1], "base64")
             .toString()
             .split(":");
-            const email = credentials[0]
+            const username = credentials[0]
             const password = credentials[1];
-            const [rows] = await db.query(`
-            SELECT * FROM appuser WHERE email = ?;
-            `, [email]);
+            const user = await getUsernameUser(username);
             let passwordHash, isMatch;
-            if (rows) {
-                passwordHash = rows[0].account_password;
+            if (user) {
+                passwordHash = user.password;
                 isMatch = await bcrypt.compare(password, passwordHash);
             }
-            if (!isMatch || !rows) {
+            if (!isMatch || !user) {
                 res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Incorrect email or password" } );
             }
             else {
                 const { id } = req.params;
-                if (rows[0].id.toString() !== id) {
+                if (user.id.toString() !== id) {
                     res.status(403).json( { msg: "Not allowed to get other user's profile" } );
                 }
                 else{
@@ -36,6 +35,74 @@ export const verifyToken = async (req, res, next) => {
         }
         
     } catch (error) {
-        res.status(500).json({ error: error.message })
+        return res.status(500).json({ error: error.message })
+    }
+}
+
+export const verifyTokenProduct = async (req, res, next) => {
+    try {
+        let token = req.header("Authorization");
+        if (!token) {
+            res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Missing token" } );
+        }
+        else {
+            const credentials = Buffer.from(token.split(" ")[1], "base64")
+            .toString()
+            .split(":");
+            const username = credentials[0]
+            const password = credentials[1];
+            const user = await getUsernameUser(username);
+            let passwordHash, isMatch;
+            if (user) {
+                passwordHash = user.password;
+                isMatch = await bcrypt.compare(password, passwordHash);
+            }
+            if (!isMatch || !user) {
+                res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Incorrect email or password" } );
+            }
+            else {
+                const { id } = req.params;
+                const product = await getIdProduct(id);
+                if (user.id.toString() !== product.owner_user_id.toString()) {
+                    res.status(403).json( { msg: "Not allowed to operate" } );
+                }
+                else{
+                    next();
+                }
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
+
+export const verifyTokenCreateProduct = async (req, res, next) => {
+    try {
+        let token = req.header("Authorization");
+        if (!token) {
+            res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Missing token" } );
+        }
+        else {
+            const credentials = Buffer.from(token.split(" ")[1], "base64")
+            .toString()
+            .split(":");
+            const username = credentials[0]
+            const password = credentials[1];
+            const user = await getUsernameUser(username);
+            let passwordHash, isMatch;
+            if (user) {
+                passwordHash = user.password;
+                isMatch = await bcrypt.compare(password, passwordHash);
+            }
+            if (!isMatch || !user) {
+                res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Incorrect email or password" } );
+            }
+            else {
+                req.body.owner_user_id = user.id;
+                next();
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
     }
 }

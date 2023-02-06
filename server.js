@@ -1,21 +1,23 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import sequelize from './models/index.js'
 import userRoutes from './routes/users.js';
+import productRoutes from './routes/products.js';
 
-dotenv.config();
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(cors());
-
+dotenv.config()
+const app = express()
+sequelize.sync()
+app.use(express.json())
+app.use(express.urlencoded())
 // Default
 app.get('/healthz', (req, res) => {  
     res.status(200).json({ msg: "Succesful access" });
 });
 
 // Routes
-app.use("/", userRoutes);
+app.use("/v1", userRoutes);
+app.use("/v1", productRoutes);
 
 const port = 8080
 export const server = app.listen(port, () => {

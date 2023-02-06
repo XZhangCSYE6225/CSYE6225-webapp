@@ -1,11 +1,11 @@
-import { getUsers, getIDUser, createUser, updateUser } from '../services/users.js';
+import { getUsers, getIdUser, createUser, updateUser } from '../services/users.js';
 
 // GET
 export const getUserById = async (req, res) => {
     try {
         const { id } = req.params;
-        const user = await getIDUser(id);
-        delete user[0].account_password;
+        const user = await getIdUser(id);
+        delete user.password;
         res.status(200).json(user);
     } catch (error) {
         res.status(404).json({ error: error.message });
@@ -25,18 +25,15 @@ export const getAllUser = async (req, res) => {
 export const updateUserById = async (req, res) => {
     try {
         const {
-            email,
-            firstname,
-            lastname,
-            account_password,
+            username,
             account_created,
             account_updated
         } = req.body;
-        if ( email || account_created || account_updated ) {
+        if ( username || account_created || account_updated ) {
             return res.status(400).json( { msg: "Not allowed to modify email account_created and account_updated" } )
         }
-        updateUser(req.params.id, req.body);
-        res.status(204).json();
+        const user = updateUser(req.params.id, req.body);
+        res.status(204).json(user);
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -46,30 +43,29 @@ export const updateUserById = async (req, res) => {
 export const register = async (req, res) => {
     try {
         const {
-            email,
-            account_password,
-            firstname,
-            lastname,
+            username,
+            password,
+            first_name,
+            last_name,
             account_created,
             account_updated
         } = req.body;
-        if (!email || !account_password || !firstname || !lastname) {
-            return res.status(400).json( { msg: "You must enter all email, account_password, firstname, lastname" } )
+        if (!username || !password || !first_name || !last_name) {
+            return res.status(400).json( { msg: "You must enter all username, password, firstname, lastname" } )
         }
         if (account_created || account_updated) {
             return res.status(400).json( { msg: "You should not enter account_created and account_updated manually" } )
         }
         const pattern = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4}$)/;
-        if (!pattern.test(req.body.email)) {
+        if (!pattern.test(req.body.username)) {
             return res.status(400).json( { msg: "email address invalid" } )
         }
-        const saveid = await createUser(req.body);
-        if (saveid === -1) {
+        const saveUserId = await createUser(req.body);
+        if (saveUserId === -1) {
             return res.status(400).json( { msg: "Email address already exist" } );
         }
-        const user = await getIDUser(saveid);
-        delete user[0].account_password;
-        res.status(201).json(user);
+        const saveUser = await getIdUser(saveUserId);
+        res.status(201).json(saveUser);
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
