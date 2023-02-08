@@ -40,5 +40,7 @@ npm i
 ```
 5. Run the app
 ```sh
+
+1
 nodemon server.js
 ```
