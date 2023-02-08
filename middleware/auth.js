@@ -63,8 +63,11 @@ export const verifyTokenProduct = async (req, res, next) => {
             else {
                 const { id } = req.params;
                 const product = await getIdProduct(id);
+                if (!product) {
+                    return res.status(400).json();
+                }
                 if (user.id.toString() !== product.owner_user_id.toString()) {
-                    res.status(403).json( { msg: "Not allowed to operate" } );
+                    return res.status(403).json( { msg: "Not allowed to operate" } );
                 }
                 else{
                     next();
@@ -98,7 +101,7 @@ export const verifyTokenCreateProduct = async (req, res, next) => {
                 res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Incorrect email or password" } );
             }
             else {
-                req.body.owner_user_id = user.id;
+                req.body.owner_id = user.id;
                 next();
             }
         }
