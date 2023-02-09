@@ -15,11 +15,9 @@ app.use(express.urlencoded())
 app.get('/healthz', (req, res) => {  
     res.status(200).json({ msg: "Succesful access" });
 });
-
 // Routes
 // app.use("/v1", userRoutes);
 // app.use("/v1", productRoutes);
-
 const port = 8080
 export const server = app.listen(port);
 
