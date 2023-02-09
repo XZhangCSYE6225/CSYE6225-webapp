@@ -6,9 +6,7 @@ import sequelize from './config/index.js'
 
 // dotenv.config()
 const app = express()
-// sequelize.sync()
-// .then()
-// .catch();
+sequelize.sync()
 app.use(express.json())
 app.use(express.urlencoded())
 // Default
