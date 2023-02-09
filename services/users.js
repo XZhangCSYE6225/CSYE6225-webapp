@@ -1,66 +1,59 @@
-import db from '../database/database.js';
-import bcrypt, { hash } from 'bcrypt';
+import { user } from '../models/user.js'
+import bcrypt from 'bcrypt';
 
 
 export async function getUsers() {
-    const [rows] = await db.query("SELECT * FROM appuser");
-    return rows;
+    const users = await user.findAll();
+    return users;
 }
 
-export async function getIDUser(id) {
-    const [rows] = await db.query(`
-    SELECT * FROM appuser WHERE id = ?
-    `, [id]);
-    return rows;
+export async function getIdUser(id) {
+    const users = await user.findOne({
+        attributes: ["id", "first_name", "last_name", "username", "account_created", "account_updated"],
+        where: {
+            id: id
+        }
+    });
+    return users;
 }
 
-export async function getEmailUser(email) {
-    const [[ rows ]] = await db.query(`
-    SELECT * FROM appuser WHERE email = ?
-    `, [email]);
-    return rows;
+export async function getUsernameUser(username) {
+    const users = await user.findOne({
+        where: {
+            username: username
+        }
+    });
+    return users;
 }
 
 export async function updateUser(id, body) {
-    const [[rows]] = await db.query(`
-    SELECT * FROM appuser WHERE id = ? 
-    `, [id]);
-    let {
-        account_password,
-        lastname,
-        firstname
-    } = body;
+    const users = getIdUser(id);
+    let { newPassword } = body;
 
-    if (!account_password) {
-        account_password = rows.account_password;
+    if (!newPassword) {
+        newPassword = users.password;
     }
     else {
         const salt = await bcrypt.genSalt();
-        account_password = await bcrypt.hash(body.account_password, salt);
+        newPassword = await bcrypt.hash(body.password, salt);
     }
-    if (!lastname) {
-        lastname = rows.lastname;
-    }
-    if (!firstname) {
-        firstname = rows.firstname;
-    }
-    await db.query(`
-    UPDATE appuser
-    SET account_password = ?, lastname = ?, firstname = ?
-    WHERE id = ?`, [account_password, lastname, firstname, id]);
+    body.password = newPassword;
+    const updatedUser = await user.update(body, {
+        where: {
+            id: id
+        }
+    });
+    return updatedUser;
 }
 
 export async function createUser(body) {
-    const emailInDatabase = await getEmailUser(body.email);
+    const emailInDatabase = await getUsernameUser(body.username);
     if (emailInDatabase) {
         return -1;
     }
     const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(body.account_password, salt);
-    const [result] = await db.query(`
-    INSERT INTO appuser (email, firstname, lastname, account_password)
-    VALUE (?, ?, ?, ?);
-    `, [body.email, body.firstname, body.lastname, passwordHash]);
-    const id = result.insertId;
-    return id;
+    const passwordHash = await bcrypt.hash(body.password, salt);
+    body.password = passwordHash;
+    const users = await user.create(body)
+    return users.id;
 }
