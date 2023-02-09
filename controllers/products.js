@@ -75,6 +75,9 @@ export const updateProductByIdUsePUT = async (req, res) => {
                 return res.status(400).json({});
             }
         }
+        if (req.body.quantity && req.body.quantity < 0) {
+            return res.status(400).json({ msg: "Product quantity cannot be less than 0."});
+        }
         const updatedproduct = await updateIdProduct(req.params.id, req.body);
         res.status(204).json(updatedproduct);
     } catch (error) {
