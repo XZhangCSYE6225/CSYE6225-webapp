@@ -21,7 +21,5 @@ app.get('/healthz', (req, res) => {
 // app.use("/v1", productRoutes);
 
 const port = 8080
-export const server = app.listen(port, () => {
-    console.log(`The server runs at ${port}.`);
-});
+export const server = app.listen(port);
 
