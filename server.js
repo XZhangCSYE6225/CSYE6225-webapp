@@ -6,7 +6,9 @@ import sequelize from './config/index.js'
 
 dotenv.config()
 const app = express()
-sequelize.sync();
+sequelize.sync()
+.then()
+.catch();
 app.use(express.json())
 app.use(express.urlencoded())
 // Default
@@ -22,6 +24,4 @@ const port = 8080
 export const server = app.listen(port, () => {
     console.log(`The server runs at ${port}.`);
 });
-
-export default sequelize;
 
