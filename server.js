@@ -1,14 +1,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import sequelize from './config/index.js'
+// import sequelize from './config/index.js'
 // import userRoutes from './routes/users.js';
 // import productRoutes from './routes/products.js';
 
-dotenv.config()
+// dotenv.config()
 const app = express()
-sequelize.sync()
-.then()
-.catch();
+// sequelize.sync()
+// .then()
+// .catch();
 app.use(express.json())
 app.use(express.urlencoded())
 // Default
