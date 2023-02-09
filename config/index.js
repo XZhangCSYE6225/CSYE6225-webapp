@@ -8,8 +8,7 @@ const {
     DIALECT = "mysql"
 } = process.env;
 const sequelize = new Sequelize(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD, {
-    dialect: DIALECT,
-    host: "127.0.0.1"
+    dialect: DIALECT
 })
 
 
