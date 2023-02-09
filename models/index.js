@@ -1,6 +1,6 @@
 import sequelize from "../config/index.js";
 import Product from "./product.js";
-import User from "./User.js";
+import User from "./user.js";
 
 export const user = sequelize.define('user', User, {
     createdAt: 'account_created',
