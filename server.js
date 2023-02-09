@@ -1,24 +1,19 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
 import userRoutes from './routes/users.js';
+import productRoutes from './routes/products.js';
 
-dotenv.config();
-const app = express();
+// dotenv.config()
+const app = express()
+
 app.use(express.json());
-app.use(express.urlencoded());
-app.use(cors());
-
 // Default
 app.get('/healthz', (req, res) => {  
     res.status(200).json({ msg: "Succesful access" });
 });
-
 // Routes
-app.use("/", userRoutes);
-
+app.use("/v1", userRoutes);
+app.use("/v1", productRoutes);
 const port = 8080
-export const server = app.listen(port, () => {
-    console.log(`The server runs at ${port}.`);
-});
+export const server = app.listen(port);
 
