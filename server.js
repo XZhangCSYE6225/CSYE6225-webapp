@@ -8,7 +8,6 @@ const app = express()
 sequelize.sync().then((res)=>{
     // 
 }).catch((error) => {
-    console.log(error);
 })
 
 app.use(express.json());
