@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { server } from '../server.js';
+import sequelize from '../config/index.js';
 
 test('1+1=2', ()=>{
     expect(1+1).toBe(2);
