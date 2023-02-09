@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-// import sequelize from './config/index.js'
+import sequelize from './config/index.js'
 // import userRoutes from './routes/users.js';
 // import productRoutes from './routes/products.js';
 
