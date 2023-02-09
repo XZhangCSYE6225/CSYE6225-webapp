@@ -10,7 +10,8 @@ const {
 
 const sequelize = new Sequelize(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD, {
     dialect: DIALECT,
-    host: "127.0.0.1"
+    host: "127.0.0.1",
+    port: 3307
 })
 
 
