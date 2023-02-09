@@ -1,44 +1,44 @@
-import sequelize from '../models/index.js'
+import { user } from '../models/index.js'
 import bcrypt from 'bcrypt';
 
 
 export async function getUsers() {
-    const users = await sequelize.models.user.findAll();
+    const users = await user.findAll();
     return users;
 }
 
 export async function getIdUser(id) {
-    const user = await sequelize.models.user.findOne({
+    const users = await user.findOne({
         attributes: ["id", "first_name", "last_name", "username", "account_created", "account_updated"],
         where: {
             id: id
         }
     });
-    return user;
+    return users;
 }
 
 export async function getUsernameUser(username) {
-    const user = await sequelize.models.user.findOne({
+    const users = await user.findOne({
         where: {
             username: username
         }
     });
-    return user;
+    return users;
 }
 
 export async function updateUser(id, body) {
-    const user = getIdUser(id);
+    const users = getIdUser(id);
     let { newPassword } = body;
 
     if (!newPassword) {
-        newPassword = user.password;
+        newPassword = users.password;
     }
     else {
         const salt = await bcrypt.genSalt();
         newPassword = await bcrypt.hash(body.password, salt);
     }
     body.password = newPassword;
-    const updatedUser = await sequelize.models.user.update(body, {
+    const updatedUser = await user.update(body, {
         where: {
             id: id
         }
@@ -54,6 +54,6 @@ export async function createUser(body) {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(body.password, salt);
     body.password = passwordHash;
-    const user = await sequelize.models.user.create(body)
-    return user.id;
+    const users = await user.create(body)
+    return users.id;
 }

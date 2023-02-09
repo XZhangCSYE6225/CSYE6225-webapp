@@ -29,7 +29,8 @@ const Product = {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-            min: 0
+            min: 0,
+            max: 100
         }
     },
     owner_user_id: {

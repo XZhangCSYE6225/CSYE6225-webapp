@@ -1,16 +1,16 @@
-import sequelize from '../models/index.js'
+import { product } from '../models/index.js';
 
 export async function getIdProduct(id) {
-    const product = await sequelize.models.product.findOne({
+    const products = await product.findOne({
         where: {
             id: id
         }
     });
-    return product;
+    return products;
 }
 
 export async function updateIdProduct(id, body) {    
-    const updatedProduct = await sequelize.models.product.update(body, {
+    const updatedProduct = await product.update(body, {
         where: {
             id: id
         }
@@ -19,7 +19,7 @@ export async function updateIdProduct(id, body) {
 }
 
 export async function deleteProduct(id) {
-    const deletedProduct = await sequelize.models.product.destroy({
+    const deletedProduct = await product.destroy({
         where: {
             id: id
         }
@@ -28,6 +28,15 @@ export async function deleteProduct(id) {
 }
 
 export async function createProduct(body) {
-    const newproduct = await sequelize.models.product.create(body);
+    const newproduct = await product.create(body);
     return newproduct;
+}
+
+export async function getSkuProduct(sku) {
+    const skuuser = await product.findOne({
+        where: {
+            sku: sku
+        }
+    })
+    return skuuser;
 }

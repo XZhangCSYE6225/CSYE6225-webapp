@@ -6,7 +6,7 @@ export const verifyTokenUser = async (req, res, next) => {
     try {
         let token = req.header("Authorization");
         if (!token) {
-            res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Missing token" } );
+            res.set("WWW-Authenticate", "Basic").status(401).json();
         }
         else {
             const credentials = Buffer.from(token.split(" ")[1], "base64")
@@ -21,12 +21,12 @@ export const verifyTokenUser = async (req, res, next) => {
                 isMatch = await bcrypt.compare(password, passwordHash);
             }
             if (!isMatch || !user) {
-                res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Incorrect email or password" } );
+                res.set("WWW-Authenticate", "Basic").status(401).json();
             }
             else {
                 const { id } = req.params;
                 if (user.id.toString() !== id) {
-                    res.status(403).json( { msg: "Not allowed to get other user's profile" } );
+                    res.status(403).json();
                 }
                 else{
                     next();
@@ -43,7 +43,7 @@ export const verifyTokenProduct = async (req, res, next) => {
     try {
         let token = req.header("Authorization");
         if (!token) {
-            res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Missing token" } );
+            res.set("WWW-Authenticate", "Basic").status(401).json();
         }
         else {
             const credentials = Buffer.from(token.split(" ")[1], "base64")
@@ -58,13 +58,16 @@ export const verifyTokenProduct = async (req, res, next) => {
                 isMatch = await bcrypt.compare(password, passwordHash);
             }
             if (!isMatch || !user) {
-                res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Incorrect email or password" } );
+                res.set("WWW-Authenticate", "Basic").status(401).json();
             }
             else {
                 const { id } = req.params;
                 const product = await getIdProduct(id);
-                if (user.id.toString() !== product.owner_user_id.toString()) {
-                    res.status(403).json( { msg: "Not allowed to operate" } );
+                if (!product) {
+                    res.status(404).json();
+                }
+                else if (user.id.toString() !== product.owner_user_id.toString()) {
+                    res.status(403).json();
                 }
                 else{
                     next();
@@ -95,10 +98,10 @@ export const verifyTokenCreateProduct = async (req, res, next) => {
                 isMatch = await bcrypt.compare(password, passwordHash);
             }
             if (!isMatch || !user) {
-                res.set("WWW-Authenticate", "Basic").status(401).json( { msg: "Incorrect email or password" } );
+                res.set("WWW-Authenticate", "Basic").status(401).json();
             }
             else {
-                req.body.owner_user_id = user.id;
+                req.body.owner_id = user.id;
                 next();
             }
         }

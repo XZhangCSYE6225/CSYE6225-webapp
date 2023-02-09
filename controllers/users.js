@@ -26,11 +26,17 @@ export const updateUserById = async (req, res) => {
     try {
         const {
             username,
+            password,
+            first_name,
+            last_name,
             account_created,
-            account_updated
+            account_updated,
         } = req.body;
         if ( username || account_created || account_updated ) {
-            return res.status(400).json( { msg: "Not allowed to modify email account_created and account_updated" } )
+            return res.status(400).json()
+        }
+        if (first_name === undefined || last_name === undefined || password === undefined) {
+            return res.status(400).json()
         }
         const user = updateUser(req.params.id, req.body);
         res.status(204).json(user);
@@ -51,18 +57,18 @@ export const register = async (req, res) => {
             account_updated
         } = req.body;
         if (!username || !password || !first_name || !last_name) {
-            return res.status(400).json( { msg: "You must enter all username, password, firstname, lastname" } )
+            return res.status(400).json()
         }
         if (account_created || account_updated) {
-            return res.status(400).json( { msg: "You should not enter account_created and account_updated manually" } )
+            return res.status(400).json()
         }
         const pattern = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4}$)/;
         if (!pattern.test(req.body.username)) {
-            return res.status(400).json( { msg: "email address invalid" } )
+            return res.status(400).json()
         }
         const saveUserId = await createUser(req.body);
         if (saveUserId === -1) {
-            return res.status(400).json( { msg: "Email address already exist" } );
+            return res.status(400).json();
         }
         const saveUser = await getIdUser(saveUserId);
         res.status(201).json(saveUser);

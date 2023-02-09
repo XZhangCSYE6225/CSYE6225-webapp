@@ -1,13 +1,12 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
-import sequelize from './models/index.js'
+import sequelize from './config/index.js'
 import userRoutes from './routes/users.js';
 import productRoutes from './routes/products.js';
 
 dotenv.config()
 const app = express()
-sequelize.sync()
+sequelize.sync();
 app.use(express.json())
 app.use(express.urlencoded())
 // Default
@@ -23,4 +22,6 @@ const port = 8080
 export const server = app.listen(port, () => {
     console.log(`The server runs at ${port}.`);
 });
+
+export default sequelize;
 
