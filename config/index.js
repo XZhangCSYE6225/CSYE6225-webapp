@@ -4,7 +4,7 @@ dotenv.config();
 const {
     DATABASE_NAME = "user_schema",
     DATABASE_USERNAME = "root",
-    DATABASE_PASSWORD = "zx991115",
+    DATABASE_PASSWORD = "Zx991115a",
     DIALECT = "mysql"
 } = process.env;
 const sequelize = new Sequelize(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD, {
