@@ -6,6 +6,10 @@ on:
     types:
       - closed
 
+env:
+  AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_EC2}}
+  AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY_EC2}}
+
 jobs:
   if_merged:
     if: github.event.pull_request.merged == true
