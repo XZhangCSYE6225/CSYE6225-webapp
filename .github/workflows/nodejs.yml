@@ -28,6 +28,8 @@ jobs:
         run: |
           npm i
           npm test
+      - name: Init packer
+        run: packer init -var-file="./packer/variables.pkr.hcl" ./packer/webapp.pkr.hcl
       - name: Validate packer file
         run: packer validate -var-file="./packer/variables.pkr.hcl" ./packer/webapp.pkr.hcl
           
