@@ -1,0 +1,24 @@
+on:
+  pull_request:
+    branches: [ "main" ]
+    types:
+      - closed
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup packer
+        uses: hashicorp/setup-packer@main
+      - name: Compress webapp
+        run: |
+          cd .. 
+          zip -r webapp.zip webapp/
+          cd webapp
+      - name: Init packer
+        run: packer init -var-file="./packer/variables.pkr.hcl" ./packer/webapp.pkr.hcl
+
+      - name: Build ami with packer
+        run: packer build -var-file="./packer/variables.pkr.hcl" ./packer/webapp.pkr.hcl
