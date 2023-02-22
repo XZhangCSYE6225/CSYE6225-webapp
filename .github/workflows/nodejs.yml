@@ -12,5 +12,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm ci
-      - run: npm test
+      - run: |
+          sleep 10
+          ls -al
+          sleep 10
+          cd ..
+          sleep 10
+          ls -al
+          npm ci
+          npm test
