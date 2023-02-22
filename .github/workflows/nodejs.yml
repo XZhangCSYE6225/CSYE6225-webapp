@@ -21,9 +21,6 @@ jobs:
           cd .. 
           zip -r webapp.zip webapp/
           cd webapp
-          echo $AWS_ACCESS_KEY
-          echo $AWS_SECRET_ACCESS_KEY
-          sleep 30
       - name: Run unit test
         run: |
           npm i
