@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_EC2}}
+  AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY_EC2}}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,12 +16,18 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: |
-          sleep 10
-          ls -al
-          sleep 10
-          cd ..
-          sleep 10
-          ls -al
-          npm ci
+      - name: Compress webapp
+        run: |
+          cd .. 
+          zip -r webapp.zip webapp/
+          cd webapp
+          echo $AWS_ACCESS_KEY
+          echo $AWS_SECRET_ACCESS_KEY
+          sleep 30
+      - name: Run unit test
+        run: |
+          npm i
           npm test
+      - name: Validate packer file
+        run: packer validate -var-file="./packer/variables.pkr.hcl" ./packer/webapp.pkr.hcl
+          
