@@ -5,8 +5,8 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_EC2}}
-  AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY_EC2}}
+  AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_AMI}}
+  AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY_AMI}}
 
 jobs:
   build:
