@@ -42,3 +42,6 @@ npm i
 ```sh
 nodemon server.js
 ```
+
+## Create AMI
+After PR is raised and pass both unit tests and validation tests, the branch is merged into main branch, meanwhile github actions will be triggered and will automatically create a new AMI using packer files in ```./packer/```. 
