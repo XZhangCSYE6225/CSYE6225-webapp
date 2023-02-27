@@ -36,7 +36,7 @@ packer {
 }
 
 source "amazon-ebs" "webapp" {
-  ami_name        = "webapp-ami-${formatdate("YYYY-MM-DD-hh-mm-ss", timestamp())}"
+  ami_name        = 
   ami_description = "AMI for webapp"
   source_ami      = "${var.source_ami}"
   instance_type   = "${var.instance_type}"
