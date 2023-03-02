@@ -1,5 +1,5 @@
 import express from 'express'
-import sequelize from './config/index.js'
+import sequelize from './config/sequelize.js'
 import userRoutes from './routes/users.js'
 import productRoutes from './routes/products.js'
 
@@ -19,5 +19,7 @@ app.get('/healthz', (req, res) => {
 app.use("/v1", userRoutes)
 app.use("/v1", productRoutes)
 const port = 8080
-export const server = app.listen(port)
+export const server = app.listen(port, () => {
+    console.log(`Runs at ${port}`)
+})
 

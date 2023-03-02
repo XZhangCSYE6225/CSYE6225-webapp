@@ -1,35 +1,30 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
-const User = {
-    id: {
+
+const Image = {
+    image_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         unique: true
     },
-    first_name: {
+    product_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    file_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    last_name: {
+    s3_bucket_path: {
         type: DataTypes.STRING,
         allowNull: false
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: true
-        }
     }
+
 };
-export const user = sequelize.define('user', User, {
-    createdAt: 'account_created',
-    updatedAt: 'account_updated'
+export const image = sequelize.define('image', Image, {
+    createdAt: false,
+    updatedAt: 'date_updated',
+
 });
