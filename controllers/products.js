@@ -1,4 +1,6 @@
 import { getIdProduct, updateIdProduct, deleteProduct, createProduct, getSkuProduct } from "../services/products.js";
+import { deletedIdImage, getAllImages } from "../services/images.js";
+import { deleteImage } from "../services/s3.js";
 
 export const getProductById = async (req, res) => {
     try {
@@ -116,6 +118,11 @@ export const updateProductByIdUsePATCH = async (req, res) => {
 
 export const deleteProductById = async (req, res) => {
     try {
+        const allimages = await getAllImages(req.params.id);
+        allimages.forEach(async image => {
+            await deleteImage(image.s3_bucket_path);
+            await deletedIdImage(image.image_id);
+        });
         const updatedproduct = await deleteProduct(req.params.id, req.body);
         res.status(204).json();
     } catch (error) {

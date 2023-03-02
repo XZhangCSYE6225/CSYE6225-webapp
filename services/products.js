@@ -28,15 +28,15 @@ export async function deleteProduct(id) {
 }
 
 export async function createProduct(body) {
-    const newproduct = await product.create(body);
-    return newproduct;
+    const newProduct = await product.create(body);
+    return newProduct;
 }
 
 export async function getSkuProduct(sku) {
-    const skuuser = await product.findOne({
+    const skuUser = await product.findOne({
         where: {
             sku: sku
         }
     })
-    return skuuser;
+    return skuUser;
 }
