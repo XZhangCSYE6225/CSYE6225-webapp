@@ -4,9 +4,12 @@
 ## Prerequisites
 - [Node.js](https://nodejs.org/en/download/)
 - [Mysql](https://dev.mysql.com/downloads/mysql/)
+- [Packer](https://developer.hashicorp.com/packer/downloads)
 
 ## Language
 - Node.js
+- HCL
+- Shell
 
 ## Tool
 - Postman
@@ -19,6 +22,8 @@
 - supertest
 - cors
 - bagel
+- @aws-sdk/client-s3
+- multer
 
 ## Initialize Steps
 1. Set up a workspace
