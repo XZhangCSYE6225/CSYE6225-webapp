@@ -21,6 +21,9 @@ jobs:
           cd .. 
           zip -r webapp.zip webapp/
           cd webapp
+      - name: Setup env
+        run: |
+          echo "DIALECT=mysql"
       - name: Run unit test
         run: |
           npm i
