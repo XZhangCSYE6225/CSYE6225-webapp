@@ -30,22 +30,25 @@ export const getImages = async (req, res) => {
 
 export const postImage = async (req, res) => {
     try {
+        if (req.file.mimetype !== "jpeg" || req.file.mimetype !== "jpg" || req.file.mimetype !== "png") {
+            return res.status(400).json({ type:req.file.mimetype });
+        }
         const { id } = await getIdProduct(req.params.id);
         const bucket_path = `${id}/${req.file.originalname}`;
-        const isExist = await isImageExist(bucket_path)
-        const metadata = {
+        const isExist = await isImageExist(bucket_path);
+        let fileName = req.file.originalname;
+        let metadata = {
             product_id: req.params.id,
             file_name: req.file.originalname,
             s3_bucket_path: bucket_path
         }
-        const result = await uploadImage(req.file.buffer, bucket_path, req.file.mimetype);
         if (isExist !== null) {
-            
+            metadata.file_name = fileName + Date.now().toString();
+            metadata.s3_bucket_path = `${id}/${fixedFileName}`;
         }
-        else {
-            const newImage = await createImage(metadata);
-            res.status(201).json(newImage);
-        }
+        const result = await uploadImage(req.file.buffer, bucket_path, req.file.mimetype);
+        const newImage = await createImage(metadata);
+        res.status(201).json(newImage);
     } catch (error) {
         res.status(400).json({ msg: error });
     }
