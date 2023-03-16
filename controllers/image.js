@@ -30,7 +30,7 @@ export const getImages = async (req, res) => {
 
 export const postImage = async (req, res) => {
     try {
-        if (req.file.mimetype !== "jpeg" || req.file.mimetype !== "jpg" || req.file.mimetype !== "png") {
+        if (req.file.mimetype.split("/")[0] !== "image") {
             return res.status(400).json({ type:req.file.mimetype });
         }
         const { id } = await getIdProduct(req.params.id);
@@ -43,10 +43,12 @@ export const postImage = async (req, res) => {
             s3_bucket_path: bucket_path
         }
         if (isExist !== null) {
-            metadata.file_name = fileName + Date.now().toString();
-            metadata.s3_bucket_path = `${id}/${fixedFileName}`;
+            let subString = fileName.split(".");
+            subString[subString.length - 2] += Date.now().toString();
+            metadata.file_name = subString.join(".");
+            metadata.s3_bucket_path = `${id}/${metadata.file_name}`;
         }
-        const result = await uploadImage(req.file.buffer, bucket_path, req.file.mimetype);
+        const result = await uploadImage(req.file.buffer, metadata.s3_bucket_path, req.file.mimetype);
         const newImage = await createImage(metadata);
         res.status(201).json(newImage);
     } catch (error) {
