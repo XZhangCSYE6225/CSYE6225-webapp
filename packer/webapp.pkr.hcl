@@ -43,7 +43,7 @@ source "amazon-ebs" "webapp" {
   region          = "${var.aws_region}"
   ssh_username    = "${var.ssh_username}"
   ami_users       = ["${var.account_id}"]
-  profile = "dev"
+  profile         = "dev"
 
   aws_polling {
     delay_seconds = 30

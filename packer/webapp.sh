@@ -12,6 +12,11 @@ sudo yum install unzip -y
 
 cd ~/ && unzip webapp.zip
 cd ~/webapp && npm i
+sudo cp ~/webapp/packer/config.json /opt/
+sudo mkdir -p /var/log/webapp/
+sudo yum install amazon-cloudwatch-agent -y
 
 sudo mv /tmp/webapp.service /etc/systemd/system/webapp.service
 sudo systemctl enable webapp.service
+sudo systemctl enable amazon-cloudwatch-agent.service
+sudo systemctl start amazon-cloudwatch-agent.service
