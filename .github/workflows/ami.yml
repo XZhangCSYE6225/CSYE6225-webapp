@@ -43,30 +43,17 @@ jobs:
           sudo apt-get install -y awscli
       - name: Get latest ami id
         run: |
-          LATEST_AMI_ID=$(aws ec2 describe-images \
-            --filters "Name=state,Values=available" \   
-            --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
-            --output text)
+          LATEST_AMI_ID=$(aws ec2 describe-images --filters "Name=state,Values=available" --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
           echo "LATEST_AMI_ID=$LATEST_AMI_ID" >> $GITHUB_ENV
       - name: Get latest launch template id
         run: |
-          LATEST_LT_ID=$(aws ec2 describe-launch-templates \
-            --query 'sort_by(LaunchTemplates, &CreationTime)[-1].LaunchTemplateId' \
-            --output text)
+          LATEST_LT_ID=$(aws ec2 describe-launch-templates --query 'sort_by(LaunchTemplates, &CreationTime)[-1].LaunchTemplateId' --output text)
           echo "LATEST_LT_ID=$LATEST_LT_ID" >> $GITHUB_ENV
       - name: Get latest launch template version
         run: |
-          LATEST_VERSION=$(aws ec2 describe-launch-templates \
-            --launch-template-ids $LATEST_LT_ID \
-            --query 'LaunchTemplates[0].LatestVersionNumber' \
-            --output text)
+          LATEST_VERSION=$(aws ec2 describe-launch-templates --launch-template-ids $LATEST_LT_ID --query 'LaunchTemplates[0].LatestVersionNumber' --output text)
           echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
       - name: Create a new version of the Launch Template
-        run: aws ec2 create-launch-template-version \
-              --launch-template-id $LATEST_LT_ID \
-              --source-version $LATEST_VERSION \
-              --launch-template-data '{"ImageId":"$LATEST_AMI_ID"}'
+        run: aws ec2 create-launch-template-version --launch-template-id $LATEST_LT_ID --source-version $LATEST_VERSION --launch-template-data '{"ImageId":"$LATEST_AMI_ID"}'
       - name: Start instance fresh
         run: aws autoscaling start-instance-refresh --auto-scaling-group-name csye6225-asg-spring2023
-
-      
