@@ -47,7 +47,7 @@ jobs:
           echo "LATEST_AMI_ID=$LATEST_AMI_ID" >> $GITHUB_ENV
       - name: Get latest launch template id
         run: |
-          LATEST_LT_ID=$(aws ec2 describe-launch-templates --query 'sort_by(LaunchTemplates, &CreationTime)[-1].LaunchTemplateId' --output text)
+          LATEST_LT_ID=$(aws ec2 describe-launch-templates --query 'sort_by(LaunchTemplates, &CreateTime)[-1].LaunchTemplateId' --output text)
           echo "LATEST_LT_ID=$LATEST_LT_ID" >> $GITHUB_ENV
       - name: Get latest launch template version
         run: |
