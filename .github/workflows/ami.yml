@@ -44,7 +44,7 @@ jobs:
       - name: Get latest ami id
         run: |
           LATEST_AMI_ID=$(aws ec2 describe-images \
-            --filters 'Name=state,Values=available' \   
+            --filters "Name=state,Values=available" \   
             --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
             --output text)
           echo "LATEST_AMI_ID=$LATEST_AMI_ID" >> $GITHUB_ENV
