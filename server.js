@@ -34,6 +34,28 @@ app.get('/healthz', (req, res) => {
         res.status(400).send();
     }
 });
+
+// Route for CI/CD
+app.get('/CICD', (req, res) => {
+    try {
+        statsdClient.increment("CICD");
+        const response = {
+            method: "GET",
+            endpoint: "/CICD",
+            status: 200
+        };
+        logger.info(response);
+        res.status(200).send(response);
+    } catch (error) {
+        const response = {
+            method: "GET",
+            endpoint: "/CICD",
+            status: 400
+        };
+        logger.error(response);
+        res.status(400).send();
+    }
+});
 // Routes
 app.use("/v1", userRoutes)
 app.use("/v1", productRoutes)
