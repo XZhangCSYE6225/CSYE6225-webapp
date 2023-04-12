@@ -53,6 +53,9 @@ jobs:
         run: |
           LATEST_VERSION=$(aws ec2 describe-launch-templates --launch-template-ids $LATEST_LT_ID --query 'LaunchTemplates[0].LatestVersionNumber' --output text)
           echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+      - run: |
+          echo "{{"ImageId":"$LATEST_AMI_ID"}}"
+          echo $LATEST_AMI_ID
       - name: Create a new version of the Launch Template
         run: aws ec2 create-launch-template-version --launch-template-id $LATEST_LT_ID --source-version $LATEST_VERSION --launch-template-data '{"ImageId":"$LATEST_AMI_ID"}'
       - name: Start instance fresh
