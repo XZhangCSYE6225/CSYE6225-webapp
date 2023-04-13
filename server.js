@@ -36,12 +36,12 @@ app.get('/healthz', (req, res) => {
 });
 
 // Route for CI/CD
-app.get('/CICD', (req, res) => {
+app.get('/cicd', (req, res) => {
     try {
-        statsdClient.increment("CICD");
+        statsdClient.increment("CI/CD");
         const response = {
             method: "GET",
-            endpoint: "/CICD",
+            endpoint: "/cicd",
             status: 200
         };
         logger.info(response);
@@ -49,7 +49,7 @@ app.get('/CICD', (req, res) => {
     } catch (error) {
         const response = {
             method: "GET",
-            endpoint: "/CICD",
+            endpoint: "/cicd",
             status: 400
         };
         logger.error(response);
