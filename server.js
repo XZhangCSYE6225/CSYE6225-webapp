@@ -57,8 +57,8 @@ app.get('/cicd', (req, res) => {
     }
 });
 // Routes
-app.use("/v1", userRoutes)
-app.use("/v1", productRoutes)
+app.use("/v2", userRoutes)
+app.use("/v2", productRoutes)
 const port = 8080
 export const server = app.listen(port, () => {
     logger.info(`Webapp runs at ${port}`);
